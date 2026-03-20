@@ -2,5 +2,9 @@
     <string name="app_name">CeroDespiste</string>
 
     <!-- Game Screen -->
-    <string name="app_name">CeroDespiste</string>
+    <string name="current_score">PUNTAJE ACTUAL</string>
+    <string name="score">0850</string>
+    <string name="round">Round 1 de 10</string>
+    <string name="whatch_sequence"> MIRA LA SECUENCIA</string>
+    <string name="start_game">EMPEZAR EL JUEGO</string>
 </resources>
