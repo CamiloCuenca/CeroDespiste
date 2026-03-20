@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -54,7 +53,7 @@ fun WelcomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f))
         )
 
         Column(
@@ -70,7 +69,7 @@ fun WelcomeScreen(
             Text(
                 text = "Memoriza la secuencia de colores y repítela correctamente.\n¡Un solo error y chao!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.LightGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 
@@ -115,5 +114,7 @@ fun WelcomeScreen(
 @Composable
 @Preview
 fun WelcomeScreenPreview(){
-    WelcomeScreen()
+    com.servicerca.cerodespiste.ui.theme.CeroDespisteTheme {
+        WelcomeScreen()
+    }
 }

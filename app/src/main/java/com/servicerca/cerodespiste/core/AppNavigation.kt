@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.servicerca.cerodespiste.Screens.WelcomeScreen
-import com.servicerca.cerodespiste.core.UserScreen
 
 @Composable
 fun AppNavigation() {
