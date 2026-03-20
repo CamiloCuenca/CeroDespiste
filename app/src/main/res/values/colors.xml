@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Neon Arcade palette -->
+    <color name="neon_primary">#FF00E5FF</color>
+    <color name="neon_secondary">#FFFFD600</color>
+    <color name="neon_tertiary">#FFFF1744</color>
+    <color name="neon_neutral">#FF0A0E14</color>
+    <color name="neon_on_primary">#FF000000</color>
+    <color name="neon_on_secondary">#FF000000</color>
+    <color name="neon_on_tertiary">#FFFFFFFF</color>
+
 </resources>
