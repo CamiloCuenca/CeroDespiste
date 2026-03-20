@@ -7,9 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.example.demoapp.features.dashboard.component.BottomNavigationBar
-import com.example.demoapp.features.dashboard.component.TopAppBar
-import com.example.demoapp.features.dashboard.navigation.UserNavigation
 
 @Composable
 fun UserScreen(
@@ -26,7 +23,6 @@ fun UserScreen(
             // Barra superior con título y botón de cierre de sesión
             TopAppBar(
                 title = title,
-                logout = onLogout // Función para cerrar sesión, que se pasa desde el componente padre
             )
         },
         bottomBar = {
