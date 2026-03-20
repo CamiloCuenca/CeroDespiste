@@ -4,8 +4,10 @@ import kotlinx.serialization.Serializable
 
 sealed class DashboardRoutes {
 
+
+
     @Serializable
-    data object HomeUser : DashboardRoutes()
+    data object GameScreen : DashboardRoutes()
 
     @Serializable
     data object Results : DashboardRoutes()

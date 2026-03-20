@@ -82,7 +82,7 @@ enum class Destination(
     val label: String,
     val icon: ImageVector,
 ){
-    HOME(DashboardRoutes.HomeUser, "Home", Icons.Default.Home ),
+    HOME(DashboardRoutes.GameScreen, "Home", Icons.Default.Home ),
     SEARCH(DashboardRoutes.Results, "Score", Icons.Default.Home),
 
 }
