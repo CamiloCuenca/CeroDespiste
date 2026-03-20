@@ -23,11 +23,6 @@ fun AppNavigation() {
             startDestination = MainRoutes.Welcome // Pantalla de inicio, esta es la primer pantalla que se muestra al iniciar la aplicación
         ) {
 
-            // Definición de las rutas y sus composables asociados (se puede agregar más rutas según sea necesario)
-
-            composable<MainRoutes.Home> {
-                HomeScreen()
-            }
 
 
             }

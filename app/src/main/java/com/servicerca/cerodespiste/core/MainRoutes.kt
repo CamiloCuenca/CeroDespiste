@@ -7,8 +7,7 @@ sealed class MainRoutes {
 
     @Serializable
     data object Welcome : MainRoutes()
-    @Serializable
-    data object Home : MainRoutes()
+
 
 
 
