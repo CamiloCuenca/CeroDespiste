@@ -30,7 +30,8 @@ fun ResultScreen(
     playtime: String = "04:22.05",
     fasterPercent: String = "+12%",
     onTryAgain: () -> Unit = {},
-    onBackToHome: () -> Unit = {}
+    onBackToHome: () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -39,15 +40,17 @@ fun ResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(contentPadding)
+                .systemBarsPadding()
                 .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(70.dp))
 
             // Title
             NeonText(
-                text = "NEON MEMORY",
+                text = "Cero Despiste",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -316,6 +319,9 @@ fun ResultScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Reserva espacio inferior igual al padding que venga del Scaffold/Navigation
+            Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
         }
     }
 }
