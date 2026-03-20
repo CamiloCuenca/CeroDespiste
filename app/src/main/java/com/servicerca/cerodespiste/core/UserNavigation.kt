@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.servicerca.cerodespiste.Screens.GameScreen
 
-import com.servicerca.cerodespiste.Screens.HomeScreen
 import com.servicerca.cerodespiste.Screens.ResultScreen
 
 @Composable

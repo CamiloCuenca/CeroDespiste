@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.servicerca.cerodespiste.R
 import kotlinx.coroutines.delay
@@ -25,7 +26,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun GameScreen(
     current_score: String = stringResource(R.string.current_score),
-    score: String = stringResource(R.string.score),
     round: String = stringResource(R.string.round),
     sequenceText: String = stringResource(R.string.whatch_sequence),
     start_game: String = stringResource(R.string.start_game),
@@ -35,6 +35,7 @@ fun GameScreen(
     round_game_over: String = stringResource(R.string.round),
     score_game_over: String = stringResource(R.string.score_game_over),
     view_score: String = stringResource(R.string.vew_score),
+    contentPadding: PaddingValues = PaddingValues()
 ) {
 
     val scope = rememberCoroutineScope()
@@ -160,11 +161,16 @@ fun GameScreen(
 
     Column(
         modifier = Modifier
-            .padding(vertical = 100.dp, horizontal = 16.dp)
+            .padding(contentPadding)
+            .systemBarsPadding()
+            .padding(horizontal = 16.dp)
             .fillMaxSize()
     ) {
 
         Column {
+
+            Spacer(modifier = Modifier.height(30.dp))
+
 
             Text(
                 text = current_score,
@@ -299,6 +305,9 @@ fun GameScreen(
                 )
             }
         }
+
+        // Reserva espacio adicional igual al padding inferior que venga del Scaffold/Navigation
+        Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
     }
 
     if (showGameOver) {
@@ -362,6 +371,12 @@ fun GameScreen(
             }
         )
     }
+}
+
+@Composable
+@Preview
+fun GameScreenPreview() {
+    GameScreen()
 }
 
 @Composable
