@@ -14,22 +14,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.servicerca.cerodespiste.ui.theme.TextGray
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun StatItem(
+    modifier: Modifier = Modifier,
     label: String,
     valueTitle: String,
-    valueColor: Color,
-    modifier: Modifier = Modifier
+    valueColor: Color? = null
 ) {
+    val actualValueColor = valueColor ?: MaterialTheme.colorScheme.primary
     androidx.compose.foundation.layout.Column(
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
             text = label.uppercase(),
-            color = TextGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
@@ -37,8 +38,8 @@ fun StatItem(
         Spacer(modifier = Modifier.height(4.dp))
         NeonText(
             text = valueTitle,
-            color = valueColor,
             fontSize = 20.sp,
+            color = actualValueColor,
             fontWeight = FontWeight.Bold,
             glowRadius = 10f
         )
@@ -47,18 +48,19 @@ fun StatItem(
 
 @Composable
 fun ProgressBarSegmented(
+    modifier: Modifier = Modifier,
     totalSegments: Int,
     filledSegments: Int,
-    segmentColor: Color,
-    modifier: Modifier = Modifier
+    segmentColor: Color? = null
 ) {
+    val actualSegmentColor = segmentColor ?: MaterialTheme.colorScheme.primary
     Row(modifier = modifier) {
         for (i in 0 until totalSegments) {
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(4.dp)
-                    .background(if (i < filledSegments) segmentColor else Color(0xFF2A3441))
+                    .background(if (i < filledSegments) actualSegmentColor else MaterialTheme.colorScheme.surfaceVariant)
             )
             if (i < totalSegments - 1) {
                 Spacer(modifier = Modifier.width(4.dp))
@@ -69,21 +71,22 @@ fun ProgressBarSegmented(
 
 @Composable
 fun ProgressBarSolid(
+    modifier: Modifier = Modifier,
     progress: Float,
-    color: Color,
-    modifier: Modifier = Modifier
+    color: Color? = null
 ) {
+    val actualColor = color ?: MaterialTheme.colorScheme.primary
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(4.dp)
-            .background(Color(0xFF2A3441))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(progress)
                 .height(4.dp)
-                .background(color)
+                .background(actualColor)
         )
     }
 }

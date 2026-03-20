@@ -2,10 +2,10 @@ package com.servicerca.cerodespiste.core
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -14,7 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.media3.common.Timeline
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,32 +29,39 @@ fun BottomNavigationBar(
 
     // Actualizar el título de la barra superior según la pantalla actual
     LaunchedEffect(currentDestination) {
-        val destination = Destination.entries.find { it.route::class.qualifiedName == currentDestination?.route }
+        val destination = Destination.entries.find { it.route.route == currentDestination?.route }
         if (destination != null) {
             titleTopBar(destination.label)
         }
     }
 
-    // Crear la barra de navegación inferior
+    // Crear la barra de navegación inferior usando los colores del tema
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
     ){
         // Iteramos cada item de navegación definido en Destination
-        Destination.entries.forEachIndexed { index, destination ->
+        Destination.entries.forEach { destination ->
 
             // Verificar si el item está seleccionado
-            val isSelected = currentDestination?.route == destination.route::class.qualifiedName
+            val isSelected = currentDestination?.route == destination.route.route
+
+            // Colores según estado usando roles del tema
+            val selectedColor = MaterialTheme.colorScheme.primary
+            val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)
 
             NavigationBarItem(
                 label = {
-                    // Etiqueta del item de navegación
+                    // Etiqueta del item de navegación con color según estado
                     Text(
-                        text = destination.label
+                        text = destination.label,
+                        color = if (isSelected) selectedColor else unselectedColor
                     )
                 },
                 onClick = {
                     // Navegar a la ruta correspondiente al item seleccionado
-                    navController.navigate(destination.route){
+                    navController.navigate(destination.route.route){
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -64,10 +70,11 @@ fun BottomNavigationBar(
                     }
                 },
                 icon = {
-                    // Icono del item de navegación
+                    // Icono del item de navegación con tint según estado
                     Icon(
                         imageVector = destination.icon,
-                        contentDescription = destination.label
+                        contentDescription = destination.label,
+                        tint = if (isSelected) selectedColor else unselectedColor
                     )
                 },
                 selected = isSelected
@@ -82,7 +89,7 @@ enum class Destination(
     val label: String,
     val icon: ImageVector,
 ){
-    HOME(DashboardRoutes.HomeUser, "Home", Icons.Default.Home ),
-    SEARCH(DashboardRoutes.Results, "Score", Icons.Default.Home),
+    PLAY(DashboardRoutes.GameScreen, "Game", Icons.Default.PlayArrow ),
+    SCORE(DashboardRoutes.Results, "Score", Icons.Default.List),
 
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.servicerca.cerodespiste.Screens.GameScreen
 
 import com.servicerca.cerodespiste.Screens.HomeScreen
 import com.servicerca.cerodespiste.Screens.ResultScreen
@@ -17,14 +18,14 @@ fun UserNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = DashboardRoutes.HomeUser
+        startDestination = DashboardRoutes.GameScreen.route
     ) {
 
-        composable<DashboardRoutes.HomeUser> {
-            HomeScreen()
+        composable(route = DashboardRoutes.GameScreen.route) {
+              GameScreen()
         }
 
-        composable<DashboardRoutes.Results> {
+        composable(route = DashboardRoutes.Results.route) {
             ResultScreen()
         }
 

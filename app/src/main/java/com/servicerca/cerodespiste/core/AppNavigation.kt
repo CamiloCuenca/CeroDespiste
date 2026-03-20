@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.servicerca.cerodespiste.Screens.HomeScreen
+import com.servicerca.cerodespiste.Screens.WelcomeScreen
 
 @Composable
 fun AppNavigation() {
@@ -20,12 +20,26 @@ fun AppNavigation() {
     ) {
         NavHost(
             navController = navController, // Controlador de navegación
-            startDestination = MainRoutes.Welcome // Pantalla de inicio, esta es la primer pantalla que se muestra al iniciar la aplicación
+            startDestination = MainRoutes.Welcome.route // Pantalla de inicio, esta es la primer pantalla que se muestra al iniciar la aplicación
         ) {
 
+            composable(route = MainRoutes.Welcome.route) {
+                WelcomeScreen (
+                    onStartGame = {
+                        navController.navigate(MainRoutes.User.route)
+                    }
+                )
 
+            }
 
+            // Registrar el contenedor de usuario (con Scaffold que tiene TopAppBar y BottomNavigationBar)
+            composable(route = MainRoutes.User.route) {
+                UserScreen(onLogout = {
+                    // Volver a la pantalla de bienvenida al cerrar sesión
+                    navController.popBackStack(MainRoutes.Welcome.route, inclusive = false)
+                })
             }
 
         }
     }
+}

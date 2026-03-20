@@ -14,25 +14,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.servicerca.cerodespiste.ui.theme.MainCardBackground
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun DottedBorderCard(
     modifier: Modifier = Modifier,
-    borderColor: Color = Color(0xFF0077FF),
+    borderColor: Color? = null,
     content: @Composable () -> Unit
 ) {
+    val actualBorder = borderColor ?: MaterialTheme.colorScheme.primary
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(MainCardBackground)
+            .background(MaterialTheme.colorScheme.surface)
             .drawBehind {
                 val stroke = Stroke(
                     width = 4.dp.toPx(),
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(8.dp.toPx(), 8.dp.toPx()), 0f)
                 )
                 drawRoundRect(
-                    color = borderColor,
+                    color = actualBorder,
                     size = Size(size.width, size.height),
                     cornerRadius = CornerRadius(16.dp.toPx(), 16.dp.toPx()),
                     style = stroke

@@ -5,19 +5,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.servicerca.cerodespiste.ui.components.*
-import com.servicerca.cerodespiste.ui.theme.*
 
 @Composable
 fun ResultScreen(
@@ -35,7 +34,7 @@ fun ResultScreen(
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = BackgroundDark
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             modifier = Modifier
@@ -49,7 +48,7 @@ fun ResultScreen(
             // Title
             NeonText(
                 text = "NEON MEMORY",
-                color = NeonGreen,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
                 glowRadius = 20f,
@@ -61,7 +60,7 @@ fun ResultScreen(
             ) {
                 // Card Border
                 DottedBorderCard(
-                    borderColor = BorderBlue,
+                    borderColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp)
@@ -76,14 +75,14 @@ fun ResultScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "FINAL SCORE",
-                            color = LightText,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 2.sp
                         )
                         NeonText(
                             text = score,
-                            color = NeonCyan,
+                            color = MaterialTheme.colorScheme.primary,
                             fontSize = 64.sp,
                             fontWeight = FontWeight.ExtraBold,
                             glowRadius = 30f,
@@ -99,32 +98,32 @@ fun ResultScreen(
                             StatItem(
                                 label = "Accuracy",
                                 valueTitle = accuracy,
-                                valueColor = NeonYellow
+                                valueColor = MaterialTheme.colorScheme.secondary
                             )
                             // Vertical Divider
                             Box(
                                 modifier = Modifier
                                     .width(1.dp)
                                     .height(40.dp)
-                                    .background(Color(0xFF2A3441))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
                             )
                             StatItem(
                                 label = "Multiplier",
                                 valueTitle = multiplier,
-                                valueColor = NeonRed
+                                valueColor = MaterialTheme.colorScheme.tertiary
                             )
                         }
 
                         Spacer(modifier = Modifier.height(32.dp))
-                        
+
                         // Separator line
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(2.dp)
-                                .background(Color(0xFF0077FF).copy(alpha = 0.5f))
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
                         )
-                        
+
                         Spacer(modifier = Modifier.height(32.dp))
 
                         // Progress Section
@@ -135,7 +134,7 @@ fun ResultScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "PROGRESS",
-                                    color = TextGray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.sp
@@ -144,33 +143,33 @@ fun ResultScreen(
                                 Row(verticalAlignment = Alignment.Bottom) {
                                     Text(
                                         text = roundReached,
-                                        color = Color.White,
+                                        color = MaterialTheme.colorScheme.secondary,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
                                         text = " / $totalRounds",
-                                        color = TextGray,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 16.sp,
                                         modifier = Modifier.padding(bottom = 4.dp)
                                     )
                                 }
                                 Text(
                                     text = "Round Reached",
-                                    color = TextGray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 ProgressBarSolid(
                                     progress = 0.8f,
-                                    color = NeonCyan,
+                                    color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(end = 16.dp)
                                 )
                             }
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "INTENSITY",
-                                    color = TextGray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.sp
@@ -178,33 +177,33 @@ fun ResultScreen(
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = intensity,
-                                    color = NeonYellow,
+                                    color = MaterialTheme.colorScheme.secondary,
                                     fontSize = 32.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
                                     text = "Max Sequence",
-                                    color = TextGray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 ProgressBarSegmented(
                                     totalSegments = 5,
                                     filledSegments = 4,
-                                    segmentColor = NeonYellow,
+                                    segmentColor = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier.padding(end = 8.dp)
                                 )
                             }
                         }
 
                         Spacer(modifier = Modifier.height(32.dp))
-                        
+
                         // Playtime Box
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(BackgroundDark.copy(alpha = 0.8f))
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
                                 .padding(16.dp)
                         ) {
                             Row(
@@ -216,23 +215,23 @@ fun ResultScreen(
                                     modifier = Modifier
                                         .size(40.dp)
                                         .clip(RoundedCornerShape(20.dp))
-                                        .background(Color(0xFF2A3441)),
+                                        .background(MaterialTheme.colorScheme.surfaceVariant),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text("⏱", fontSize = 16.sp)
+                                    Text("⏱", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column {
                                     Text(
                                         text = "TOTAL PLAYTIME",
-                                        color = TextGray,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         letterSpacing = 1.sp
                                     )
                                     Text(
                                         text = playtime,
-                                        color = Color.White,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -241,13 +240,13 @@ fun ResultScreen(
                                 Column(horizontalAlignment = Alignment.End) {
                                     Text(
                                         text = "NEW PERSONAL BEST!",
-                                        color = TextGray,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 8.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                     NeonText(
                                         text = "$fasterPercent faster",
-                                        color = NeonCyan,
+                                        color = MaterialTheme.colorScheme.primary,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         glowRadius = 8f
@@ -263,21 +262,24 @@ fun ResultScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(2.dp)
-                                .background(Color(0xFF0077FF).copy(alpha = 0.5f))
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
                         )
-                        
+
                         Spacer(modifier = Modifier.height(32.dp))
 
                         // Buttons
                         NeonButton(
                             text = "TRY AGAIN",
                             onClick = onTryAgain,
-                            gradientColors = listOf(NeonCyan, NeonCyanGradientEnd),
-                            glowColor = NeonCyan
+                            gradientColors = listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                            ),
+                            glowColor = MaterialTheme.colorScheme.primary
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         SecondaryButton(
                             text = "BACK TO HOME",
                             onClick = onBackToHome
@@ -290,29 +292,29 @@ fun ResultScreen(
                     modifier = Modifier
                         .padding(start = 24.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(NeonRed)
+                        .background(MaterialTheme.colorScheme.tertiary)
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
                         text = "GAME OVER",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onTertiary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.sp
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             // Text to show the player name
             Text(
                 text = "Player: $playerName",
-                color = TextGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal
             )
-            
+
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -321,5 +323,7 @@ fun ResultScreen(
 @Composable
 @Preview(showBackground = true)
 fun ResultScreenPreview() {
-    ResultScreen()
+    com.servicerca.cerodespiste.ui.theme.CeroDespisteTheme {
+        ResultScreen()
+    }
 }
