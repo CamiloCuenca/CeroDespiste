@@ -14,5 +14,5 @@ val OnSecondary = Color(0xFF000000)
 val OnTertiary = Color(0xFFFFFFFF)
 
 // Optional helpers if you want slightly different surface shades
-val SurfaceDark = Color(0xFF0F1318)
-val SurfaceLight = Color(0xFFFFFFFF)
+val SurfaceDark = Color(0xFF242834)
+val SurfaceLight = Color(0xFFB0B0B0)
