@@ -2,9 +2,9 @@ package com.servicerca.cerodespiste.core
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,7 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.media3.common.Timeline
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,7 +29,7 @@ fun BottomNavigationBar(
 
     // Actualizar el título de la barra superior según la pantalla actual
     LaunchedEffect(currentDestination) {
-        val destination = Destination.entries.find { it.route::class.qualifiedName == currentDestination?.route }
+        val destination = Destination.entries.find { it.route.route == currentDestination?.route }
         if (destination != null) {
             titleTopBar(destination.label)
         }
@@ -41,10 +40,10 @@ fun BottomNavigationBar(
         modifier = Modifier.fillMaxWidth(),
     ){
         // Iteramos cada item de navegación definido en Destination
-        Destination.entries.forEachIndexed { index, destination ->
+        Destination.entries.forEach { destination ->
 
             // Verificar si el item está seleccionado
-            val isSelected = currentDestination?.route == destination.route::class.qualifiedName
+            val isSelected = currentDestination?.route == destination.route.route
 
             NavigationBarItem(
                 label = {
@@ -55,7 +54,7 @@ fun BottomNavigationBar(
                 },
                 onClick = {
                     // Navegar a la ruta correspondiente al item seleccionado
-                    navController.navigate(destination.route){
+                    navController.navigate(destination.route.route){
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -82,7 +81,7 @@ enum class Destination(
     val label: String,
     val icon: ImageVector,
 ){
-    HOME(DashboardRoutes.GameScreen, "Home", Icons.Default.Home ),
-    SEARCH(DashboardRoutes.Results, "Score", Icons.Default.Home),
+    PLAY(DashboardRoutes.GameScreen, "Game", Icons.Default.PlayArrow ),
+    SCORE(DashboardRoutes.Results, "Score", Icons.AutoMirrored.Filled.List),
 
 }

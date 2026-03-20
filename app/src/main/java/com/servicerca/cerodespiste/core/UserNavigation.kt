@@ -18,16 +18,14 @@ fun UserNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = DashboardRoutes.GameScreen
+        startDestination = DashboardRoutes.GameScreen.route
     ) {
 
-
-
-        composable<DashboardRoutes.GameScreen> {
+        composable(route = DashboardRoutes.GameScreen.route) {
               GameScreen()
         }
 
-        composable<DashboardRoutes.Results> {
+        composable(route = DashboardRoutes.Results.route) {
             ResultScreen()
         }
 
