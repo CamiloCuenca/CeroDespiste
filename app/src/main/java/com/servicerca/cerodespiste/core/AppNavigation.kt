@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import com.servicerca.cerodespiste.Screens.WelcomeScreen
 
 @Composable
@@ -25,19 +27,23 @@ fun AppNavigation() {
 
             composable(route = MainRoutes.Welcome.route) {
                 WelcomeScreen (
-                    onStartGame = {
-                        navController.navigate(MainRoutes.User.route)
+                    onStartGame = { playerName ->
+                        navController.navigate(MainRoutes.User.createRoute(playerName))
                     }
                 )
 
             }
 
             // Registrar el contenedor de usuario (con Scaffold que tiene TopAppBar y BottomNavigationBar)
-            composable(route = MainRoutes.User.route) {
+            composable(
+                route = MainRoutes.User.route,
+                arguments = listOf(navArgument("player") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val player = backStackEntry.arguments?.getString("player") ?: "Jugador"
                 UserScreen(onLogout = {
                     // Volver a la pantalla de bienvenida al cerrar sesión
                     navController.popBackStack(MainRoutes.Welcome.route, inclusive = false)
-                })
+                }, playerName = player)
             }
 
         }

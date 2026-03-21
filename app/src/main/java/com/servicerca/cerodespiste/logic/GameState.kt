@@ -6,5 +6,7 @@ data class GameState(
     val isUserTurn: Boolean = false,
     val activeColor: Int? = null,
     val isGameOver: Boolean = false,
-    val score: Int = 0
+    val score: Int = 0,
+    // tiempo de juego en milisegundos (0 = no calculado)
+    val playTimeMillis: Long = 0L
 )

@@ -2,9 +2,7 @@ package com.servicerca.cerodespiste.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,6 +20,7 @@ import com.servicerca.cerodespiste.ui.components.*
 fun ResultScreen(
     score: String = "12,450",
     playtime: String = "04:22.05",
+    player: String = "Jugador",
     onTryAgain: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -74,7 +73,7 @@ fun ResultScreen(
                         )
 
                         Text(
-                            text = "Nombre Juagdor",  //TODO @CAMILOCUENCA  actualizar cuando tengamso lo de nombre
+                            text = player,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
