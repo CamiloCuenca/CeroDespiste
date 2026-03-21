@@ -10,12 +10,13 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun UserScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    playerName: String = "Jugador"
 ) {
 
     // Estados para la navegación y el título de la barra superior
     val navController = rememberNavController()
-    var title by remember { mutableStateOf("Inicio usuario") }
+    var title by remember { mutableStateOf(playerName) }
 
     // Estructura Scaffold (barra superior, barra inferior y contenido)
     Scaffold(
@@ -29,7 +30,8 @@ fun UserScreen(
         // Contenido principal gestionado por la navegación (NavHost)
         UserNavigation(
             navController = navController,
-            padding = padding
+            padding = padding,
+            playerName = playerName
         )
 
     }

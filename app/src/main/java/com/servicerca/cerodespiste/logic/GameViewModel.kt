@@ -15,14 +15,22 @@ class GameViewModel : ViewModel() {
 
     private val MAX_SEQUENCE = 10
 
+    // Tiempo de inicio del juego (milis)
+    private var startTimeMillis: Long = 0L
+
     fun startGame() {
         _state.value = GameState()
+        startTimeMillis = System.currentTimeMillis()
         addNewColor()
     }
 
     private fun addNewColor() {
         val currentSeq = _state.value.sequence
-        if (currentSeq.size >= MAX_SEQUENCE) return
+        if (currentSeq.size >= MAX_SEQUENCE) {
+            // Juego completado => finalizar y calcular tiempo
+            finishGame()
+            return
+        }
 
         val nextColor = (0..3).random()
         _state.update { it.copy(
@@ -53,7 +61,7 @@ class GameViewModel : ViewModel() {
         // Restricción: No se permite entrada si no es el turno o si el juego terminó
         if (!currentState.isUserTurn || currentState.isGameOver) return
 
-        // Compara el clic con el elemento correspondiente en la secuencia [13, 14]
+        // Compara el clic con el elemento correspondiente en la secuencia
         if (colorId == currentState.sequence[currentState.userIndex]) {
             val nextIndex = currentState.userIndex + 1
             if (nextIndex == currentState.sequence.size) {
@@ -65,11 +73,15 @@ class GameViewModel : ViewModel() {
                 _state.update { it.copy(userIndex = nextIndex) }
             }
         } else {
-            // Error: El juego termina inmediatamente [15]
+            // Error: El juego termina inmediatamente
             _state.update { it.copy(isGameOver = true, isUserTurn = false) }
+            finishGame()
         }
     }
 
-
+    private fun finishGame() {
+        val elapsed = if (startTimeMillis > 0L) System.currentTimeMillis() - startTimeMillis else 0L
+        _state.update { it.copy(isGameOver = true, isUserTurn = false, playTimeMillis = elapsed) }
+    }
 
 }

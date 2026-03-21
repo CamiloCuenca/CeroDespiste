@@ -19,13 +19,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.servicerca.cerodespiste.R
+import com.servicerca.cerodespiste.logic.GameViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun GameScreen(
-    onResult: () -> Unit = {},
+    onResult: (scoreText: String, playtimeText: String) -> Unit = { _, _ -> },
     current_score: String = stringResource(R.string.current_score),
     round: String = stringResource(R.string.round),
     sequenceText: String = stringResource(R.string.whatch_sequence),
@@ -44,22 +48,16 @@ fun GameScreen(
 
     val maxRounds = 10
 
-    var sequence by remember { mutableStateOf(listOf<Int>()) }
-    var playerIndex by remember { mutableStateOf(0) }
-    var highlighted by remember { mutableStateOf(-1) }
-    var allowInput by remember { mutableStateOf(false) }
-    var gameStarted by remember { mutableStateOf(false) }
+    // Reemplazamos la lógica local por el viewModel
+    val viewModel: GameViewModel = viewModel()
+    val uiState by viewModel.state.collectAsState()
 
-    var showGameOver by remember { mutableStateOf(false) }
+    var highlighted by remember { mutableStateOf(-1) }
 
     var showCountdown by remember { mutableStateOf(false) }
     var countdown by remember { mutableStateOf(3) }
 
-    var scoreValue by remember { mutableStateOf(0) }
-
-    val currentRound = sequence.size
-
-    // SONIDOS
+    // Sonidos
     val soundPool = remember {
 
         val attributes = AudioAttributes.Builder()
@@ -88,40 +86,37 @@ fun GameScreen(
         }
     }
 
-    fun playSequence() {
-
-        scope.launch {
-
-            allowInput = false
-
-            for (color in sequence) {
-
-                highlighted = color
-                playSound(color)
-
-                delay(500)
-
-                highlighted = -1
-                delay(300)
-            }
-
-            playerIndex = 0
-            allowInput = true
+    // Liberar recursos del SoundPool cuando la composable desaparezca
+    DisposableEffect(soundPool) {
+        onDispose {
+            soundPool.release()
         }
     }
 
-    fun startGame() {
-
-        scoreValue = 0
-        gameStarted = true
-        sequence = listOf((0..3).random())
-        playSequence()
+    // Helper: formatea milisegundos a mm:ss.SS
+    fun formatMillis(ms: Long): String {
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(minutes)
+        val hund = (ms % 1000) / 10
+        return String.format("%02d:%02d.%02d", minutes, seconds, hund)
     }
 
-    fun playerMove(index: Int) {
+    // Reacciona a los cambios del activeColor emitidos por el ViewModel (reproducción y resaltado)
+    LaunchedEffect(uiState.activeColor) {
+        val c = uiState.activeColor
+        if (c != null) {
+            highlighted = c
+            playSound(c)
+        } else {
+            highlighted = -1
+        }
+    }
 
-        if (!allowInput) return
+    // Cuando el usuario hace click, delegamos al viewModel y reproducimos sonido/resaltado corto
+    fun onColorClick(index: Int) {
+        if (!uiState.isUserTurn || uiState.isGameOver) return
 
+        // Mostrar feedback local inmediato
         highlighted = index
         playSound(index)
 
@@ -130,35 +125,18 @@ fun GameScreen(
             highlighted = -1
         }
 
-        if (sequence[playerIndex] == index) {
-
-            playerIndex++
-
-            if (playerIndex == sequence.size) {
-
-                scoreValue += 100
-
-                if (sequence.size == maxRounds) {
-                    showGameOver = true
-                    return
-                }
-
-                scope.launch {
-
-                    delay(600)
-
-                    sequence = sequence + (0..3).random()
-
-                    playSequence()
-                }
-            }
-
-        } else {
-
-            allowInput = false
-            showGameOver = true
-        }
+        viewModel.onColorClicked(index)
     }
+
+    // Derivados para UI
+    val sequence = uiState.sequence
+    val currentRound = sequence.size
+    val rawScore = uiState.score * 100 // mantener la escala visual anterior (100 pts por ronda)
+    val scoreValue = rawScore
+    val gameStarted = sequence.isNotEmpty() && !uiState.isGameOver
+
+    // formatter para puntaje con separadores
+    val numberFormatter = remember { NumberFormat.getIntegerInstance() }
 
     Column(
         modifier = Modifier
@@ -241,9 +219,9 @@ fun GameScreen(
                     .padding(vertical = 20.dp)
             ) {
 
-                ColorButton(0, Color.Green, highlighted) { playerMove(it) }
+                ColorButton(0, Color.Green, highlighted) { onColorClick(it) }
 
-                ColorButton(1, Color.Red, highlighted) { playerMove(it) }
+                ColorButton(1, Color.Red, highlighted) { onColorClick(it) }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -255,9 +233,9 @@ fun GameScreen(
                     .padding(bottom = 30.dp)
             ) {
 
-                ColorButton(2, Color.Blue, highlighted) { playerMove(it) }
+                ColorButton(2, Color.Blue, highlighted) { onColorClick(it) }
 
-                ColorButton(3, Color.Yellow, highlighted) { playerMove(it) }
+                ColorButton(3, Color.Yellow, highlighted) { onColorClick(it) }
             }
         }
 
@@ -279,7 +257,7 @@ fun GameScreen(
                         delay(500)
 
                         showCountdown = false
-                        startGame()
+                        viewModel.startGame()
                     }
                 },
                 modifier = Modifier
@@ -309,7 +287,10 @@ fun GameScreen(
         Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
     }
 
-    if (showGameOver) {
+    if (uiState.isGameOver) {
+
+        val playtimeText = formatMillis(uiState.playTimeMillis)
+        val scoreText = numberFormatter.format(scoreValue)
 
         AlertDialog(
             onDismissRequest = {},
@@ -317,12 +298,8 @@ fun GameScreen(
                 Button(
                     onClick = {
 
-                        showGameOver = false
-                        gameStarted = false
-                        sequence = emptyList()
-                        playerIndex = 0
-                        scoreValue = 0
-                        onResult()
+                        // Navegar a pantalla de resultado o acción externa
+                        onResult(scoreText, playtimeText)
 
                     }
                 ) {
@@ -337,7 +314,7 @@ fun GameScreen(
             },
             text = {
                 Text(
-                    "$round_game_over $currentRound\n$score_game_over $scoreValue"
+                    "$round_game_over $currentRound\n$score_game_over $scoreText\nTIEMPO: $playtimeText"
                 )
             }
         )
