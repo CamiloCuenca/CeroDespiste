@@ -58,7 +58,7 @@ fun ResultScreen(
                         // Score Section
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "FINAL SCORE",
+                            text = "PUNTAJE FINAL",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -123,7 +123,7 @@ fun ResultScreen(
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column {
                                     Text(
-                                        text = "TOTAL PLAYTIME",
+                                        text = "TOTAL DE TIEMPO",
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
@@ -155,7 +155,7 @@ fun ResultScreen(
 
                         // Buttons
                         NeonButton(
-                            text = "TRY AGAIN",
+                            text = "VOLVER A JUGAR",
                             onClick = onTryAgain,
                             gradientColors = listOf(
                                 MaterialTheme.colorScheme.primary,
