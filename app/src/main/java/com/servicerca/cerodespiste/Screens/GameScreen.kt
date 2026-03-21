@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreen(
+    onResult: () -> Unit = {},
     current_score: String = stringResource(R.string.current_score),
     round: String = stringResource(R.string.round),
     sequenceText: String = stringResource(R.string.whatch_sequence),
@@ -161,14 +162,12 @@ fun GameScreen(
 
     Column(
         modifier = Modifier
-            .padding(contentPadding)
             .systemBarsPadding()
             .padding(horizontal = 16.dp)
             .fillMaxSize()
     ) {
 
         Column {
-
             Spacer(modifier = Modifier.height(30.dp))
 
 
@@ -323,6 +322,7 @@ fun GameScreen(
                         sequence = emptyList()
                         playerIndex = 0
                         scoreValue = 0
+                        onResult()
 
                     }
                 ) {
