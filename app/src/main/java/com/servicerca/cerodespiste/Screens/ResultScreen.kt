@@ -20,17 +20,9 @@ import com.servicerca.cerodespiste.ui.components.*
 
 @Composable
 fun ResultScreen(
-    playerName: String = "Player 1",
     score: String = "12,450",
-    accuracy: String = "94%",
-    multiplier: String = "x4.5",
-    roundReached: String = "08",
-    totalRounds: String = "10",
-    intensity: String = "07",
     playtime: String = "04:22.05",
-    fasterPercent: String = "+12%",
     onTryAgain: () -> Unit = {},
-    onBackToHome: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues()
 ) {
     Surface(
@@ -42,21 +34,10 @@ fun ResultScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
                 .systemBarsPadding()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(70.dp))
-
-            // Title
-            NeonText(
-                text = "Cero Despiste",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.ExtraBold,
-                glowRadius = 20f,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
+            Spacer(modifier = Modifier.height(10.dp))
 
             Box(
                 modifier = Modifier.fillMaxWidth()
@@ -92,30 +73,17 @@ fun ResultScreen(
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
 
+                        Text(
+                            text = "Nombre Juagdor",  //TODO @CAMILOCUENCA  actualizar cuando tengamso lo de nombre
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 2.sp
+                        )
+
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            StatItem(
-                                label = "Accuracy",
-                                valueTitle = accuracy,
-                                valueColor = MaterialTheme.colorScheme.secondary
-                            )
-                            // Vertical Divider
-                            Box(
-                                modifier = Modifier
-                                    .width(1.dp)
-                                    .height(40.dp)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                            )
-                            StatItem(
-                                label = "Multiplier",
-                                valueTitle = multiplier,
-                                valueColor = MaterialTheme.colorScheme.tertiary
-                            )
-                        }
+
 
                         Spacer(modifier = Modifier.height(32.dp))
 
@@ -129,77 +97,6 @@ fun ResultScreen(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        // Progress Section
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "PROGRESS",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 1.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Row(verticalAlignment = Alignment.Bottom) {
-                                    Text(
-                                        text = roundReached,
-                                        color = MaterialTheme.colorScheme.secondary,
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = " / $totalRounds",
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(bottom = 4.dp)
-                                    )
-                                }
-                                Text(
-                                    text = "Round Reached",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                ProgressBarSolid(
-                                    progress = 0.8f,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.padding(end = 16.dp)
-                                )
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "INTENSITY",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 1.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = intensity,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    fontSize = 32.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Max Sequence",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                ProgressBarSegmented(
-                                    totalSegments = 5,
-                                    filledSegments = 4,
-                                    segmentColor = MaterialTheme.colorScheme.secondary,
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(32.dp))
 
                         // Playtime Box
                         Box(
@@ -240,21 +137,7 @@ fun ResultScreen(
                                     )
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
-                                Column(horizontalAlignment = Alignment.End) {
-                                    Text(
-                                        text = "NEW PERSONAL BEST!",
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        fontSize = 8.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    NeonText(
-                                        text = "$fasterPercent faster",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        glowRadius = 8f
-                                    )
-                                }
+
                             }
                         }
 
@@ -283,44 +166,20 @@ fun ResultScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        SecondaryButton(
-                            text = "BACK TO HOME",
-                            onClick = onBackToHome
-                        )
+
                     }
                 }
 
-                // GAME OVER Tag overlapping top-left
-                Box(
-                    modifier = Modifier
-                        .padding(start = 24.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.tertiary)
-                        .padding(horizontal = 16.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = "GAME OVER",
-                        color = MaterialTheme.colorScheme.onTertiary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        letterSpacing = 1.sp
-                    )
-                }
+
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Text to show the player name
-            Text(
-                text = "Player: $playerName",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal
-            )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Reserva espacio inferior igual al padding que venga del Scaffold/Navigation
+
             Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
         }
     }

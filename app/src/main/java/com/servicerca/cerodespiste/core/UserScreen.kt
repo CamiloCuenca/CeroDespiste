@@ -25,15 +25,6 @@ fun UserScreen(
                 title = title,
             )
         },
-        bottomBar = {
-            // Barra de navegación inferior con iconos y títulos
-            BottomNavigationBar(
-                navController = navController,
-                titleTopBar = {
-                    title = it
-                }
-            )
-        }
     ) { padding ->
         // Contenido principal gestionado por la navegación (NavHost)
         UserNavigation(

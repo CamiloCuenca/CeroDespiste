@@ -21,11 +21,17 @@ fun UserNavigation(
     ) {
 
         composable(route = DashboardRoutes.GameScreen.route) {
-              GameScreen()
+              GameScreen(
+                  onResult = { navController.navigate(DashboardRoutes.Results.route) },
+                  contentPadding = padding
+              )
         }
 
         composable(route = DashboardRoutes.Results.route) {
-            ResultScreen()
+            ResultScreen(
+                onTryAgain = { navController.navigate(DashboardRoutes.GameScreen.route) },
+                contentPadding = padding
+            )
         }
 
 
