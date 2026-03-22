@@ -25,7 +25,7 @@ fun UserNavigation(
 
         composable(route = DashboardRoutes.GameScreen.route) {
               GameScreen(
-                  onResult = { scoreText, timeText -> navController.navigate(DashboardRoutes.Results.createRoute(scoreText, timeText, playerName)) },
+                  onResult = { scoreText, timeText, round -> navController.navigate(DashboardRoutes.Results.createRoute(scoreText, timeText, round, playerName)) },
                   contentPadding = padding
               )
         }
@@ -35,17 +35,20 @@ fun UserNavigation(
             arguments = listOf(
                 navArgument("score") { type = NavType.StringType },
                 navArgument("time") { type = NavType.StringType },
+                navArgument("round") { type = NavType.IntType },
                 navArgument("player") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val score = backStackEntry.arguments?.getString("score") ?: "0"
             val time = backStackEntry.arguments?.getString("time") ?: "00:00.00"
+            val round = backStackEntry.arguments?.getInt("round") ?: 0
             val player = backStackEntry.arguments?.getString("player") ?: playerName
 
             ResultScreen(
                 score = score,
                 playtime = time,
                 player = player,
+                round = round,
                 onTryAgain = { navController.navigate(DashboardRoutes.GameScreen.route) },
                 contentPadding = padding
             )
