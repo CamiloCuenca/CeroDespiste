@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.airbnb.lottie.compose.*
 import com.servicerca.cerodespiste.R
 import com.servicerca.cerodespiste.logic.GameViewModel
 import kotlinx.coroutines.delay
@@ -48,7 +49,6 @@ fun GameScreen(
 
     val maxRounds = 10
 
-    // Reemplazamos la lógica local por el viewModel
     val viewModel: GameViewModel = viewModel()
     val uiState by viewModel.state.collectAsState()
 
@@ -57,16 +57,16 @@ fun GameScreen(
     var showCountdown by remember { mutableStateOf(false) }
     var countdown by remember { mutableStateOf(3) }
 
-    // Sonidos
-    val soundPool = remember {
+    var showCelebration by remember { mutableStateOf(false) }
 
+    val soundPool = remember {
         val attributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .build()
 
         SoundPool.Builder()
-            .setMaxStreams(4)
+            .setMaxStreams(6)
             .setAudioAttributes(attributes)
             .build()
     }
@@ -75,25 +75,26 @@ fun GameScreen(
     val redSound = remember { soundPool.load(context, R.raw.red, 1) }
     val blueSound = remember { soundPool.load(context, R.raw.blue, 1) }
     val yellowSound = remember { soundPool.load(context, R.raw.yellow, 1) }
+    val wowSound = remember { soundPool.load(context, R.raw.wow, 1) }
+    val failSound = remember { soundPool.load(context, R.raw.fail, 1) }
 
     fun playSound(index: Int) {
-
         when (index) {
             0 -> soundPool.play(greenSound, 1f, 1f, 1, 0, 1f)
             1 -> soundPool.play(redSound, 1f, 1f, 1, 0, 1f)
             2 -> soundPool.play(blueSound, 1f, 1f, 1, 0, 1f)
             3 -> soundPool.play(yellowSound, 1f, 1f, 1, 0, 1f)
+            4 -> soundPool.play(wowSound, 1f, 1f, 1, 0, 1f)
+            5 -> soundPool.play(failSound, 1f, 1f, 1, 0, 1f)
         }
     }
 
-    // Liberar recursos del SoundPool cuando la composable desaparezca
     DisposableEffect(soundPool) {
         onDispose {
             soundPool.release()
         }
     }
 
-    // Helper: formatea milisegundos a mm:ss.SS
     fun formatMillis(ms: Long): String {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(minutes)
@@ -101,7 +102,6 @@ fun GameScreen(
         return String.format("%02d:%02d.%02d", minutes, seconds, hund)
     }
 
-    // Reacciona a los cambios del activeColor emitidos por el ViewModel (reproducción y resaltado)
     LaunchedEffect(uiState.activeColor) {
         val c = uiState.activeColor
         if (c != null) {
@@ -112,11 +112,9 @@ fun GameScreen(
         }
     }
 
-    // Cuando el usuario hace click, delegamos al viewModel y reproducimos sonido/resaltado corto
     fun onColorClick(index: Int) {
         if (!uiState.isUserTurn || uiState.isGameOver) return
 
-        // Mostrar feedback local inmediato
         highlighted = index
         playSound(index)
 
@@ -128,47 +126,40 @@ fun GameScreen(
         viewModel.onColorClicked(index)
     }
 
-    // Derivados para UI
     val sequence = uiState.sequence
     val currentRound = sequence.size
-    val rawScore = uiState.score * 100 // mantener la escala visual anterior (100 pts por ronda)
+    val rawScore = uiState.score * 100
     val scoreValue = rawScore
     val gameStarted = sequence.isNotEmpty() && !uiState.isGameOver
 
-    // formatter para puntaje con separadores
     val numberFormatter = remember { NumberFormat.getIntegerInstance() }
 
     Column(
         modifier = Modifier
             .systemBarsPadding()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 50.dp)
             .fillMaxSize()
     ) {
 
         Column {
-            Spacer(modifier = Modifier.height(30.dp))
 
+            Spacer(modifier = Modifier.height(30.dp))
 
             Text(
                 text = current_score,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
+                style = MaterialTheme.typography.titleMedium
             )
 
             Text(
                 text = scoreValue.toString(),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 20.dp),
                 color = MaterialTheme.colorScheme.primary
             )
 
             Text(
-                text = "$round $currentRound OF $maxRounds",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                text = "$round $currentRound OF $maxRounds"
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -177,33 +168,22 @@ fun GameScreen(
                 progress = { currentRound / maxRounds.toFloat() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(6.dp),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    .height(6.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Card(
             shape = RoundedCornerShape(30.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 15.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-
             Text(
                 text = sequenceText,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
         }
@@ -216,12 +196,10 @@ fun GameScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp)
+                    .padding(vertical = 15.dp)
             ) {
-
-                ColorButton(0, Color.Green, highlighted) { onColorClick(it) }
-
-                ColorButton(1, Color.Red, highlighted) { onColorClick(it) }
+                ColorButton(0, Color(0xFF007D00), highlighted) { onColorClick(it) }
+                ColorButton(1, Color(0xFFAB0000), highlighted) { onColorClick(it) }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -230,25 +208,22 @@ fun GameScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 30.dp)
+                    .padding(vertical = 15.dp)
             ) {
-
-                ColorButton(2, Color.Blue, highlighted) { onColorClick(it) }
-
-                ColorButton(3, Color.Yellow, highlighted) { onColorClick(it) }
+                ColorButton(2, Color(0xFF0003AB), highlighted) { onColorClick(it) }
+                ColorButton(3, Color(0xFFD2D927), highlighted) { onColorClick(it) }
             }
         }
 
-        if (!gameStarted) {
+        Spacer(modifier = Modifier.height(30.dp))
 
+        if (!gameStarted) {
             Button(
                 onClick = {
-
                     showCountdown = true
                     countdown = 3
 
                     scope.launch {
-
                         while (countdown > 0) {
                             delay(1000)
                             countdown--
@@ -262,28 +237,16 @@ fun GameScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(55.dp)
-                    .shadow(
-                        elevation = 20.dp,
-                        shape = RoundedCornerShape(30.dp),
-                        ambientColor = MaterialTheme.colorScheme.primary,
-                        spotColor = MaterialTheme.colorScheme.primary
-                    ),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                    .height(55.dp),
+                shape = RoundedCornerShape(30.dp)
             ) {
-
                 Text(
                     text = start_game,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
 
-        // Reserva espacio adicional igual al padding inferior que venga del Scaffold/Navigation
         Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
     }
 
@@ -292,68 +255,71 @@ fun GameScreen(
         val playtimeText = formatMillis(uiState.playTimeMillis)
         val scoreText = numberFormatter.format(scoreValue)
 
-        AlertDialog(
-            onDismissRequest = {},
-            confirmButton = {
-                Button(
-                    onClick = {
+        LaunchedEffect(Unit) {
+            if (currentRound == maxRounds) {
+                showCelebration = true
+                playSound(4)
+            } else {
+                playSound(5)
+            }
+        }
 
-                        // Navegar a pantalla de resultado o acción externa
-                        onResult(scoreText, playtimeText)
+        Box(modifier = Modifier.fillMaxSize()) {
 
+            AlertDialog(
+                onDismissRequest = {},
+                confirmButton = {
+                    Button(onClick = { onResult(scoreText, playtimeText) }) {
+                        Text(text = view_score)
                     }
-                ) {
-                    Text(text = view_score)
+                },
+                title = { Text(text = game_over) },
+                text = {
+                    Text("$round_game_over $currentRound\n$score_game_over $scoreText\nTIEMPO: $playtimeText")
                 }
-            },
-            title = {
-                Text(
-                    text = game_over,
-                    fontWeight = FontWeight.Bold
+            )
+
+            if (showCelebration) {
+                val composition by rememberLottieComposition(
+                    LottieCompositionSpec.RawRes(R.raw.confeti)
                 )
-            },
-            text = {
-                Text(
-                    "$round_game_over $currentRound\n$score_game_over $scoreText\nTIEMPO: $playtimeText"
+                val progress by animateLottieCompositionAsState(
+                    composition = composition,
+                    iterations = 1
+                )
+
+                LaunchedEffect(progress) {
+                    if (progress == 1f) showCelebration = false
+                }
+
+                LottieAnimation(
+                    composition = composition,
+                    progress = { progress },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
-        )
+        }
     }
 
     if (showCountdown) {
-
         AlertDialog(
             onDismissRequest = {},
             confirmButton = {},
-            title = {
-                Text(
-                    text = ready,
-                    fontWeight = FontWeight.Bold
-                )
-            },
+            title = { Text(text = ready) },
             text = {
-
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
                         text = if (countdown == 0) go else countdown.toString(),
                         style = MaterialTheme.typography.displayLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         )
     }
-}
-
-@Composable
-@Preview
-fun GameScreenPreview() {
-    GameScreen()
 }
 
 @Composable
@@ -396,4 +362,10 @@ fun ColorButton(
                 onClick(id)
             }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GameScreenPreview() {
+    GameScreen()
 }
