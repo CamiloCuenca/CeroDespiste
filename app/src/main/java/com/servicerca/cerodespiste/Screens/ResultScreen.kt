@@ -21,6 +21,7 @@ fun ResultScreen(
     score: String = "12,450",
     playtime: String = "04:22.05",
     player: String = "Jugador",
+    round: Int = 0,
     onTryAgain: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -96,6 +97,15 @@ fun ResultScreen(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
+
+                        // Mostrar la ronda antes del componente de tiempo
+                        Text(
+                            text = "RONDA: $round",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
 
                         // Playtime Box
                         Box(
@@ -188,6 +198,6 @@ fun ResultScreen(
 @Preview(showBackground = true)
 fun ResultScreenPreview() {
     com.servicerca.cerodespiste.ui.theme.CeroDespisteTheme {
-        ResultScreen()
+        ResultScreen(round = 3)
     }
 }

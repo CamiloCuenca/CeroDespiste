@@ -19,18 +19,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.airbnb.lottie.compose.*
 import com.servicerca.cerodespiste.R
 import com.servicerca.cerodespiste.logic.GameViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @Composable
 fun GameScreen(
-    onResult: (scoreText: String, playtimeText: String) -> Unit = { _, _ -> },
+    onResult: (scoreText: String, playtimeText: String, round: Int) -> Unit = { _, _, _ -> },
     current_score: String = stringResource(R.string.current_score),
     round: String = stringResource(R.string.round),
     sequenceText: String = stringResource(R.string.whatch_sequence),
@@ -99,7 +100,7 @@ fun GameScreen(
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(minutes)
         val hund = (ms % 1000) / 10
-        return String.format("%02d:%02d.%02d", minutes, seconds, hund)
+        return String.format(Locale.getDefault(), "%02d:%02d.%02d", minutes, seconds, hund)
     }
 
     LaunchedEffect(uiState.activeColor) {
@@ -269,7 +270,7 @@ fun GameScreen(
             AlertDialog(
                 onDismissRequest = {},
                 confirmButton = {
-                    Button(onClick = { onResult(scoreText, playtimeText) }) {
+                    Button(onClick = { onResult(scoreText, playtimeText, currentRound) }) {
                         Text(text = view_score)
                     }
                 },
@@ -280,23 +281,14 @@ fun GameScreen(
             )
 
             if (showCelebration) {
-                val composition by rememberLottieComposition(
-                    LottieCompositionSpec.RawRes(R.raw.confeti)
-                )
-                val progress by animateLottieCompositionAsState(
-                    composition = composition,
-                    iterations = 1
-                )
-
-                LaunchedEffect(progress) {
-                    if (progress == 1f) showCelebration = false
+                // Celebración simple (emoji) en lugar de Lottie para evitar dependencias adicionales
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🎉", fontSize = 64.sp)
                 }
-
-                LottieAnimation(
-                    composition = composition,
-                    progress = { progress },
-                    modifier = Modifier.fillMaxSize()
-                )
             }
         }
     }
